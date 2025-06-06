@@ -1,6 +1,7 @@
 package com.JWTClase.JWTLogin.controller;
 
 import com.JWTClase.JWTLogin.JwtUtil;
+import com.JWTClase.JWTLogin.dto.UserDto;
 import com.JWTClase.JWTLogin.model.User;
 import com.JWTClase.JWTLogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +30,25 @@ public class AuthController {
         return ResponseEntity.ok("Usuario registrado con éxito");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
-        if (userDetails != null && passwordEncoder.matches(user.getPassword(), userDetails.getPassword())) {
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody User user) {
+//        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
+//        if (userDetails != null && passwordEncoder.matches(user.getPassword(), userDetails.getPassword())) {
+//            String token = jwtUtil.generateToken(userDetails.getUsername());
+//            return ResponseEntity.ok(token);
+//        }
+//        return ResponseEntity.status(401).body("Credenciales inválidas");
+//    }
+
+    @PostMapping("/loginConDTO")
+    public ResponseEntity<String> loginConDTO(@RequestBody UserDto userDto) {
+        UserDetails userDetails = userService.loadUserByUsername(userDto.getUsername());
+        if (userDetails != null && passwordEncoder.matches(userDto.getPassword(), userDetails.getPassword())) {
             String token = jwtUtil.generateToken(userDetails.getUsername());
             return ResponseEntity.ok(token);
         }
         return ResponseEntity.status(401).body("Credenciales inválidas");
     }
-
 
     @GetMapping("/resource")
     @PreAuthorize("hasRole('USER')")
